@@ -1,4 +1,4 @@
-package com.cc.controller;
+package com.cc.service.impl.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-03-16
  */
 @RestController
-@RequestMapping("/oplog")
-public class OplogController {
+@RequestMapping("/joblevel")
+public class JoblevelController {
 
 }

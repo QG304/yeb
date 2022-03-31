@@ -18,6 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired(required = false)
     private IAdminService adminService;
+    @Autowired(required = false)
+    private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+    @Autowired(required = false)
+    private RestAuthorizationEntryPoint restAuthorizationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
@@ -42,14 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
+                //禁用缓存
                 .headers()
                 .cacheControl();
         //添加jwt 登录授权过滤器
         http.addFilterBefore(jwtAuthencationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         //添加自定义未授权和未登录结果返回
-//        http.exceptionHandling()
-//                .accessDeniedHandler()
-//                .authenticationEntryPoint()
+        http.exceptionHandling()
+                .accessDeniedHandler(restfulAccessDeniedHandler)
+                .authenticationEntryPoint(restAuthorizationEntryPoint);
 
 
     }

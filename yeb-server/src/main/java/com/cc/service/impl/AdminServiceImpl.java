@@ -1,5 +1,6 @@
 package com.cc.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cc.config.security.JwtTokenUtil;
 import com.cc.mapper.AdminMapper;
@@ -30,6 +31,8 @@ import java.util.Map;
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements IAdminService {
     @Autowired
+    private AdminMapper adminMapper;
+    @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,6 +61,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements 
 
 
         return RespBean.success("登录成功",tokenMap);
+    }
+
+    //根据用户名获取用户
+    @Override
+    public Admin getAdminByUserName(String username) {
+        return adminMapper.selectOne(new QueryChainWrapper<Admin>(null).eq("username",username).eq("enable",true));
+        //return adminMapper.selectOne(new QueryChainWrapper<Admin>().eq("username",username).eq("enabled",true));
+
     }
 
 
