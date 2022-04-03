@@ -3,6 +3,9 @@ server:
   port: 8081
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
   main:
     allow-circular-references: true
   datasource:
@@ -33,7 +36,6 @@ mybatis-plus:
 #Mybatis SQL 打印（方法接口所在的包，不是Mapper.xml所在的包）
 #logging:
 #  level:
-#    root: debug
 #    com:
 #      cc:
 #        mapper: debug

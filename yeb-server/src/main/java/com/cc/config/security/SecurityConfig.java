@@ -1,13 +1,13 @@
 package com.cc.config.security;
 
 import com.cc.pojo.Admin;
-import com.cc.service.IAdminService;
+import com.cc.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired(required = false)
-    private IAdminService adminService;
+    private AdminService adminService;
 
     @Autowired(required = false)
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
@@ -29,7 +29,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
-
+    public void configure(WebSecurity web) throws Exception{
+        web.ignoring().antMatchers(
+                "/websocket/**",
+                "/**.html",
+                "/login/**",
+                "//hello/**",
+                "/register/**",
+                "/logout/**",
+                "/css/**",
+                "/js/**",
+                "/img/**",
+                "/fonts/**",
+                "favicon.ico",
+                "/doc.html",                    // 放行 swagger 资源
+                "/webjars/**",                  // 放行 swagger 资源
+                "/swagger-resources/**",        // 放行 swagger 资源
+                "/v2/api-docs/**"             // 放行 swagger 资源
+        );
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> {
-          Admin admin = adminService.getAdminByUserName(username);
+          Admin admin =   adminService.getAdminByUserName(username);
             if (null!=admin){
                 return admin;
             }
